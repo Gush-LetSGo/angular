@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <script src="lib/core/ht.js"></script>
+        <script src="lib/plugin/ht-obj.js"></script>
+        <script src="lib/plugin/ht-modeling.js"></script>
+        <script src="./js/RegistImages.js"></script>
+        <script src="./js/CreateFloor.js"></script>
+        <script src="./js/CreateOutsideWall.js"></script>
+        <script src="./js/CreateInsideWall.js"></script>
+        <script src="./js/CreateCabinet.js"></script>
+        <script>
+            var init = function() {
+                /** 创建 3D 拓扑图组件 */
+                var g3d = new ht.graph3d.Graph3dView();
+                /** 将拓扑图组件对应的 view 添加到 DOM 中，并监听也变大小变化事件，更新组件 */
+                g3d.addToDOM();
+                /** 设置拓扑图背景色 */
+                g3d.getView().style.background = '#416BA5';
+                /** 重载拓扑图中的 isMovable 函数，禁止移动拓扑图中的节点 */
+                g3d.isMovable = function() { return false; };
+                /** 重载拓扑图中的 isSelection 函数，禁止除门以外的节点被选中，保证门可以被双击打开 */
+                g3d.isSelectable = function(data) {
+                    return data instanceof ht.DoorWindow ||
+                        data instanceof ht.CSGBox;
+                };
+
+                /** 获取数据容器 */
+                var dm = g3d.dm();
+
+                /** 创建地板 */
+                createFloor(dm);
+
+                /** 创建外部墙体 */
+                createOutsideWall(dm);
+
+                /** 创建内部墙体 */
+                createInsideWall(dm);
+
+                /** 创建机柜 */
+                createCabinet(dm);
+            };
+        </script>
+    </head>
+    <body onload="init();">
+
+    </body>
+</html>
